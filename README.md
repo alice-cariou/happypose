@@ -16,21 +16,18 @@ Toolbox and trackers for object pose-estimation. Based on the work [CosyPose](ht
 This installation procedure will be curated.
 
 ```
-git clone --recurse-submodules https://github.com/agimus-project/happypose.git
-conda env create -f environment.yml
-cd happypose/happypose/pose_estimators/cosypose
+git clone -b packaging --recurse-submodules https://github.com/agimus-project/happypose.git
+cd happypose
+poetry install --extras render --with dev
+poetry shell
+cd happypose/pose_estimators/cosypose
 python setup.py install
-pip install -e .
+export MEGAPOSE_DATA_DIR=$PWD/local_data
+mkdir -p local_data/examples
+cd local_data/examples
+wget https://memmo-data.laas.fr/static/barbecue-sauce.tar.xz
+tar xvf barbecue-sauce.tar.xz
 ```
-# Data
-
-
-```
-Create data dir in happypose/pose_estimators/cosypose/local_data
-export MEGAPOSE_DATA_DIR=happypose/pose_estimators/cosypose/local_data
-```
-
-download [barbecue sauce](https://drive.google.com/drive/folders/10BIvhnrKGbNr8EKGB3KUtkSNcp460k9S) and put it in `$MEGAPOSE_DATA_DIR/examples/barbecue-sauce/`
 
 # Testing the install
 
