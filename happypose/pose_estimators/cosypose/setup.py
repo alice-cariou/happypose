@@ -6,7 +6,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Use correct conda compiler used to build pytorch
-os.environ['CXX'] = os.environ.get('GXX', '')
+# os.environ['CXX'] = os.environ.get('GXX', '')
 
 setup(
     name='cosypose',
