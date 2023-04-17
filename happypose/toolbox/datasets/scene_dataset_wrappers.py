@@ -1,5 +1,4 @@
-"""
-Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+"""Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,7 +12,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
 
 
 # Standard Library
@@ -62,7 +60,9 @@ def remove_invisible_objects(obs: SceneObservation) -> SceneObservation:
     ids_in_segm = np.unique(obs.segmentation)
     ids_visible = set(ids_in_segm[ids_in_segm > 0])
     visib_object_datas = [
-        object_data for object_data in obs.object_datas if object_data.unique_id in ids_visible
+        object_data
+        for object_data in obs.object_datas
+        if object_data.unique_id in ids_visible
     ]
     new_obs = dataclasses.replace(obs, object_datas=visib_object_datas)
     return new_obs

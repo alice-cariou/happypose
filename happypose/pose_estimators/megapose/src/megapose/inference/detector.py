@@ -1,5 +1,4 @@
-"""
-Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+"""Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,7 +12,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
 
 
 # Standard Library
@@ -37,7 +35,9 @@ class Detector(torch.nn.Module):
         self.model = model
         self.model.eval()
         self.config = model.config
-        self.category_id_to_label = {v: k for k, v in self.config.label_to_category_id.items()}
+        self.category_id_to_label = {
+            v: k for k, v in self.config.label_to_category_id.items()
+        }
 
     def image_tensor_from_numpy(
         self,
@@ -45,11 +45,12 @@ class Detector(torch.nn.Module):
     ) -> torch.tensor:
         """Convert numpy image to torch tensor.
 
-
         Args:
+        ----
             rgb: [H,W,3]
 
         Returns:
+        -------
             rgb_tensor: [3,H,W] torch.tensor with dtype torch.float
         """
         assert rgb.dtype == np.uint8
@@ -73,6 +74,7 @@ class Detector(torch.nn.Module):
         """Runs the detector on the given images.
 
         Args:
+        ----
             detection_th: If specified only keep detections above this
                 threshold.
             mask_th: Threshold to use when computing masks
@@ -81,28 +83,28 @@ class Detector(torch.nn.Module):
 
 
         """
-
         # [B,3,H,W]
         RGB_DIMS = [0, 1, 2]
         images = observation.images[:, RGB_DIMS]
 
         # TODO (lmanuelli): Why are we splitting this up into a list of tensors?
-        outputs_ = self.model([image_n for image_n in images])
+        outputs_ = self.model(list(images))
 
         infos = []
         bboxes = []
         masks = []
         for n, outputs_n in enumerate(outputs_):
             outputs_n["labels"] = [
-                self.category_id_to_label[category_id.item()] for category_id in outputs_n["labels"]
+                self.category_id_to_label[category_id.item()]
+                for category_id in outputs_n["labels"]
             ]
             for obj_id in range(len(outputs_n["boxes"])):
                 bbox = outputs_n["boxes"][obj_id]
-                info = dict(
-                    batch_im_id=n,
-                    label=outputs_n["labels"][obj_id],
-                    score=outputs_n["scores"][obj_id].item(),
-                )
+                info = {
+                    "batch_im_id": n,
+                    "label": outputs_n["labels"][obj_id],
+                    "score": outputs_n["scores"][obj_id].item(),
+                }
                 mask = outputs_n["masks"][obj_id, 0] > mask_th
                 bboxes.append(torch.as_tensor(bbox))
                 masks.append(torch.as_tensor(mask))
@@ -112,9 +114,14 @@ class Detector(torch.nn.Module):
             bboxes = torch.stack(bboxes).cuda().float()
             masks = torch.stack(masks).cuda()
         else:
-            infos = dict(score=[], label=[], batch_im_id=[])
+            infos = {"score": [], "label": [], "batch_im_id": []}
             bboxes = torch.empty(0, 4).cuda().float()
-            masks = torch.empty(0, images.shape[1], images.shape[2], dtype=torch.bool).cuda()
+            masks = torch.empty(
+                0,
+                images.shape[1],
+                images.shape[2],
+                dtype=torch.bool,
+            ).cuda()
 
         outputs = tc.PandasTensorCollection(
             infos=pd.DataFrame(infos),
@@ -129,7 +136,8 @@ class Detector(torch.nn.Module):
         # Keep only the top-detection for each class label
         if one_instance_per_class:
             outputs = happypose.toolbox.inference.utils.filter_detections(
-                outputs, one_instance_per_class=True
+                outputs,
+                one_instance_per_class=True,
             )
 
         # Add instance_id column to dataframe

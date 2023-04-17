@@ -1,5 +1,4 @@
-"""
-Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+"""Copyright (c) 2022 Inria & NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +48,7 @@ def make_shapenet_infos(shapenet_dir, model_name):
     taxonomy_path = shapenet_dir / "taxonomy.json"
     taxonomy = json.loads(taxonomy_path.read_text())
 
-    synset_id_to_synset = dict()
+    synset_id_to_synset = {}
 
     def get_synset(synset_id):
         if synset_id not in synset_id_to_synset:
@@ -76,7 +75,9 @@ def make_shapenet_infos(shapenet_dir, model_name):
             model_dirs = list(synset_dir.iterdir())
         else:
             model_dirs = []
-        model_names = [model_dir.name for model_dir in model_dirs if model_exists(model_dir)]
+        model_names = [
+            model_dir.name for model_dir in model_dirs if model_exists(model_dir)
+        ]
         synset.models = model_names
 
     def get_descendants(synset):
@@ -119,10 +120,13 @@ class ShapeNetObjectDataset(RigidObjectDataset):
         objects = []
 
         for synset in main_synsets:
-
             for source_id in synset.models_descendants:
                 model_path = (
-                    self.shapenet_dir / synset.synset_id / source_id / "models" / model_name
+                    self.shapenet_dir
+                    / synset.synset_id
+                    / source_id
+                    / "models"
+                    / model_name
                 )
                 label = f"shapenet_{synset.synset_id}_{source_id}"
                 category = synset.name
