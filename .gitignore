@@ -11,4 +11,4 @@ __pycache__
 *.so
 *.temp
 *tmp/
-*.cpython
+*.cpythonsetup.py
