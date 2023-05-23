@@ -27,7 +27,7 @@ from tqdm import tqdm
 
 # MegaPose
 import happypose.pose_estimators.megapose.src.megapose
-import happypose.pose_estimators.megapose.src.megapose.utils.tensor_collection as tc
+import happypose.toolbox.utils.tensor_collection as tc
 from happypose.pose_estimators.megapose.src.megapose.inference.pose_estimator import (
     PoseEstimator,
 )

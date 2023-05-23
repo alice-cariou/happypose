@@ -19,11 +19,10 @@ import os
 import sys
 from pathlib import Path
 
-# Third Party
 import pandas as pd
 from joblib import Memory
 
-# MegaPose
+# Third Party
 import happypose.pose_estimators.megapose.src.megapose as megapose
 
 PROJECT_ROOT = Path(megapose.__file__).parent.parent.parent
@@ -44,7 +43,11 @@ BLENDER_VERSION = "blender-2.93.8-linux-x64"
 BLENDER_INSTALL_DIR = LOCAL_DATA_DIR / BLENDER_VERSION
 if not BLENDER_INSTALL_DIR.exists():
     BLENDER_INSTALL_DIR = Path(os.environ["HOME"]) / BLENDER_VERSION
-PYTHON_BIN_PATH = sys.executable
+PYTHON_BIN_PATH = (
+    Path(os.environ["CONDA_PREFIX"]) / "bin/python"
+    if "CONDA_PREFIX" in os.environ
+    else Path(sys.executable)
+)
 
 BOP_PANDA3D_DS_DIR = LOCAL_DATA_DIR / "bop_models_panda3d"
 

@@ -23,8 +23,9 @@ import torch
 from omegaconf import OmegaConf
 
 # MegaPose
+import happypose
 import happypose.pose_estimators.megapose.src.megapose as megapose
-import happypose.pose_estimators.megapose.src.megapose.evaluation.eval_runner
+import happypose.pose_estimators.megapose.src.megapose.evaluation.evaluation_runner
 import happypose.toolbox.datasets.datasets_cfg
 import happypose.toolbox.inference.utils
 from happypose.pose_estimators.megapose.src.megapose.evaluation.eval_config import (
@@ -51,10 +52,9 @@ from happypose.pose_estimators.megapose.src.megapose.inference.icp_refiner impor
 from happypose.pose_estimators.megapose.src.megapose.inference.pose_estimator import (
     PoseEstimator,
 )
-from happypose.pose_estimators.megapose.src.megapose.inference.teaserpp_refiner import (
-    TeaserppRefiner,
-)
 from happypose.toolbox.datasets.datasets_cfg import make_object_dataset
+
+# from happypose.pose_estimators.megapose.src.megapose.inference.teaserpp_refiner import TeaserppRefiner
 from happypose.toolbox.lib3d.rigid_mesh_database import MeshDataBase
 from happypose.toolbox.utils.distributed import get_rank, get_tmp_dir
 from happypose.toolbox.utils.logging import get_logger
@@ -118,13 +118,12 @@ def run_eval(
     logger.info(f"Running eval on ds_name={cfg.ds_name} with setting={save_key}")
 
     # Load the dataset
-    ds_kwargs = {"load_depth": True}
-    scene_ds = megapose.datasets.datasets_cfg.make_scene_dataset(
-        cfg.ds_name,
-        **ds_kwargs,
+    ds_kwargs = dict(load_depth=True)
+    scene_ds = happypose.toolbox.datasets.datasets_cfg.make_scene_dataset(
+        cfg.ds_name, **ds_kwargs
     )
-    urdf_ds_name, obj_ds_name = megapose.datasets.datasets_cfg.get_obj_ds_info(
-        cfg.ds_name,
+    urdf_ds_name, obj_ds_name = happypose.toolbox.datasets.datasets_cfg.get_obj_ds_info(
+        cfg.ds_name
     )
 
     # drop frames if this was specified
@@ -149,6 +148,19 @@ def run_eval(
     # See https://stackoverflow.com/a/53287330
     assert cfg.coarse_run_id is not None
     assert cfg.refiner_run_id is not None
+    # TODO (emaitre): This fuction seems to take the wrong parameters. Trying to fix this
+    """
+    coarse_model, refiner_model, mesh_db = happypose.toolbox.inference.utils.load_pose_models(
+        coarse_run_id=cfg.coarse_run_id,
+        refiner_run_id=cfg.refiner_run_id,
+        n_workers=cfg.n_rendering_workers,
+        obj_ds_name=obj_ds_name,
+        urdf_ds_name=urdf_ds_name,
+        force_panda3d_renderer=True,
+    )
+    """
+    object_ds = make_object_dataset(obj_ds_name)
+
     (
         coarse_model,
         refiner_model,
@@ -156,9 +168,7 @@ def run_eval(
     ) = happypose.toolbox.inference.utils.load_pose_models(
         coarse_run_id=cfg.coarse_run_id,
         refiner_run_id=cfg.refiner_run_id,
-        n_workers=cfg.n_rendering_workers,
-        obj_ds_name=obj_ds_name,
-        urdf_ds_name=urdf_ds_name,
+        object_dataset=object_ds,
         force_panda3d_renderer=True,
     )
 

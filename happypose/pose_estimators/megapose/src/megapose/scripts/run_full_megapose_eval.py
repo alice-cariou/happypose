@@ -24,7 +24,14 @@ from typing import Dict, Tuple
 from omegaconf import OmegaConf
 
 # MegaPose
-from happypose.pose_estimators.megapose.src.megapose.bop_config import PBR_DETECTORS
+from happypose.pose_estimators.megapose.src.megapose.bop_config import (
+    PBR_COARSE,
+    PBR_DETECTORS,
+    PBR_REFINER,
+    SYNT_REAL_COARSE,
+    SYNT_REAL_DETECTORS,
+    SYNT_REAL_REFINER,
+)
 from happypose.pose_estimators.megapose.src.megapose.config import (
     DEBUG_RESULTS_DIR,
     MODELNET_TEST_CATEGORIES,

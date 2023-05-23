@@ -23,7 +23,7 @@ import pandas as pd
 import torch
 
 # MegaPose
-import happypose.pose_estimators.megapose.src.megapose.utils.tensor_collection as tc
+import happypose.toolbox.utils.tensor_collection as tc
 from happypose.toolbox.datasets.scene_dataset import SceneObservation
 from happypose.toolbox.utils.tensor_collection import PandasTensorCollection
 

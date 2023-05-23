@@ -33,5 +33,6 @@ tar xvf barbecue-sauce.tar.xz
 
 ```
 python -m happypose.pose_estimators.megapose.src.megapose.scripts.run_inference_on_example barbecue-sauce --vis-outputs
+python -m happypose.pose_estimators.cosypose.cosypose.scripts.run_inference_on_example cheetos --run-inference
 python happypose/pose_estimators/cosypose/minimal_version_scene.py
 ```
