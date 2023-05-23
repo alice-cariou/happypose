@@ -20,8 +20,6 @@ git clone -b packaging --recurse-submodules https://github.com/agimus-project/ha
 cd happypose
 poetry install --extras render --with dev
 poetry shell
-cd happypose/pose_estimators/cosypose
-python setup.py install
 export MEGAPOSE_DATA_DIR=$PWD/local_data
 mkdir -p local_data/examples
 cd local_data/examples
