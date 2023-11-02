@@ -163,8 +163,10 @@ class Panda3dCamera:
         window_props = p3d.core.WindowProperties.getDefault()
         resolution_ = (resolution[1], resolution[0])
         window_props.setSize(*resolution_)
-
+        
         frame_buffer_props = p3d.core.FrameBufferProperties.getDefault()
+        frame_buffer_props = p3d.core.FrameBufferProperties(frame_buffer_props)
+        frame_buffer_props.set_back_buffers(0)
         graphics_buffer = app.graphicsEngine.make_output(
             app.pipe,
             f"Graphics Buffer [{name}]",
@@ -175,8 +177,8 @@ class Panda3dCamera:
             app.win.getGsg(),
             app.win,
         )
-
         texture = p3d.core.Texture()
+
         graphics_buffer.addRenderTexture(
             texture,
             p3d.core.GraphicsOutput.RTMCopyRam,

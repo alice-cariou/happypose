@@ -25,9 +25,9 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 panda3d = {optional = true, version = "=1.10.13"}
-pin = "^2.6.17"
+pin = "^2.6.19"
 pybullet = {optional = true, version = "^3.2.5"}
-python = "^3.8"
+python = "^3.9"
 
 [tool.poetry.extras]
 render = ["panda3d", "pybullet"]
