@@ -44,7 +44,7 @@ from happypose.pose_estimators.megapose.config import (
 
 logger = get_logger(__name__)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
 def load_observation(
     dataset_dir: Path,

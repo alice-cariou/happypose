@@ -55,7 +55,7 @@ from happypose.toolbox.utils.tensor_collection import PandasTensorCollection
 
 logger = get_logger(__name__)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
 def load_detector(run_id: str) -> torch.nn.Module:
     run_dir = EXP_DIR / run_id

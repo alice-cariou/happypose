@@ -57,7 +57,7 @@ from happypose.toolbox.visualization.utils import make_contour_overlay
 
 logger = get_logger(__name__)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
 def load_observation(
     example_dir: Path,

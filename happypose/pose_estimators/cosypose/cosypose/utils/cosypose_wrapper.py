@@ -71,7 +71,7 @@ def make_object_dataset(example_dir: Path) -> RigidObjectDataset:
 example_dir = Path("/home/emaitre/cosypose/local_data/bop_datasets/ycbv/examples/")
 """
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
 
 class CosyPoseWrapper:
