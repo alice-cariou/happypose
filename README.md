@@ -11,30 +11,63 @@
 Toolbox and trackers for object pose-estimation. Based on the work [CosyPose](https://github.com/Simple-Robotics/cosypose) and [MegaPose](https://github.com/megapose6d/megapose6d). This directory is currently under development. Please refer to the [documentation](https://agimus-project.github.io/happypose/) for more details.
 
 
+The following instructions can be used to install happypose on mac m1
+
+# Preparing the install
+## For mac
+Before installing the project, a few modifications are to be made :
+after `/happypose/toolbox/renderer/types.py l.167`
+you need to add :
+```
+frame_buffer_props = p3d.core.FrameBufferProperties(frame_buffer_props)
+frame_buffer_props.set_back_buffers(0)
+```
+One of the frame buffer properties needed by default by panda3d is not available on mac, so this is a quick (but not ideal) fix to bypass this problem.
+
+You might also need to create an alias in your .bashrc or .zshrc
+`alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"`
+Firefox is needed in the scripts and the firefox executable is not available by default on mac.
+
+## For poetry users
+in `/happypose/pose_estimator/cosypose/cosypose/config.py`
+you need to remove (or comment) any use of `os.environ['CONDA_PREFIX']`
+`CONDA_PREFIX = os.environ['CONDA_PREFIX']` l.46
+`CONDA_BASE_DIR = os.environ['CONDA_PREFIX']` l.51
+
+same goes in `happypose/pose_estimators/megapose/config.py`
+`PYTHON_BIN_PATH = Path(os.environ["CONDA_PREFIX"]) / "bin/python"` l.54
+
+in `/happypose/pose_estimators/cosypose/setup.py l.9`
+replace
+`os.environ['CXX'] = os.environ.get('GXX', '')`
+by
+```
+if 'CONDA_PYTHON_EXE' in os.environ:
+    if 'CXX' not in os.environ:
+        os.environ['CXX'] = os.environ.get('GXX', '')
+```
+
 # Installation
 
-This installation procedure will be curated.
+## poetry.lock adjustments
 
-```
-git clone --branch dev --recurse-submodules https://github.com/agimus-project/happypose.git
-cd happypose
-conda env create -f environment.yml
-conda activate happypose
-cd happypose/pose_estimators/cosypose
-pip install .
-cd ../../..
-pip install -e .
-```
+Two of the packages in the poetry lock are not compatible with mac :
+- hpp-fcl 2.3.0 : use the 2.3.5 version instead
+- pin 2.6.17 : use the 2.6.20 version instead
 
-Installation of bop_toolkit :
+You can delete those two packages from the poetry lock to be able to use it, and pip install them afterwards.
 
-```
-conda activate happypose
-cd happypose/pose_estimators/megapose/deps/bop_toolkit_challenge/
-# Remove all versions enforcing on requirements.txt
-pip install -r requirements.txt -e .
-```
+## install with poetry
 
+`poetry install`
+`poetry shell`
+`cd happypose/pose_estimator/cosypose`
+`python3 setup.py install`
+
+You might miss  a couple of packages, but you can pip install them afterwards.
+
+If you haven't already, you will need to install libomp using brew :
+`brew install libomp`
 
 # Create data directory
 
@@ -75,16 +108,5 @@ results_path = str(os.environ['BOP_RESULTS_PATH'])
 eval_path = str(os.environ['BOP_EVAL_PATH'])
 ```
 
-You will also need to install [TEASER++](https://github.com/MIT-SPARK/TEASER-plusplus) if you want to use the depth for MegaPose. To do so, please run the following commands to install it :
 
-```
-# Go to HappyPose root directory
-apt install -y cmake libeigen3-dev libboost-all-dev
-conda activate happypose
-mamba install compilers -c conda-forge
-pip install open3d
-mkdir /build && cd /build && git clone https://github.com/MIT-SPARK/TEASER-plusplus.git
-cd TEASER-plusplus && mkdir build && cd build 
-cmake -DTEASERPP_PYTHON_VERSION=3.9 .. && make teaserpp_python
-cd python && pip install .
-```
+You can now download the data you need (see pack branch README or doc)
