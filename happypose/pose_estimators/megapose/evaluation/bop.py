@@ -37,7 +37,7 @@ from happypose.pose_estimators.megapose.evaluation.eval_config import BOPEvalCon
 from happypose.toolbox.datasets.scene_dataset import ObjectData
 from happypose.toolbox.inference.utils import make_detections_from_object_data
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Note we are actually using the bop_toolkit_lib that is directly conda installed
 # inside the docker image. This is just to access the scripts.

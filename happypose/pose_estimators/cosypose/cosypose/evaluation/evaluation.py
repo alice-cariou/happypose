@@ -66,7 +66,7 @@ from happypose.toolbox.renderer.panda3d_batch_renderer import Panda3dBatchRender
 
 import yaml
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 logger = get_logger(__name__)
 

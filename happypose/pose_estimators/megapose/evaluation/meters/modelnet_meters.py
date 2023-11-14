@@ -35,7 +35,7 @@ from happypose.toolbox.lib3d.distances import dists_add
 from happypose.toolbox.lib3d.transform import Transform
 from happypose.toolbox.lib3d.transform_ops import transform_pts
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class ModelNetErrorMeter(Meter):
