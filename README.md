@@ -15,32 +15,32 @@ The following instructions can be used to install happypose on mac m1
 
 # Preparing the install
 ## For mac
-Before installing the project, a few modifications are to be made :
-after `/happypose/toolbox/renderer/types.py l.167`
-you need to add :
+Before installing the project, a few modifications are to be made :  
+after `/happypose/toolbox/renderer/types.py l.167`  
+you need to add :  
 ```
 frame_buffer_props = p3d.core.FrameBufferProperties(frame_buffer_props)
 frame_buffer_props.set_back_buffers(0)
 ```
 One of the frame buffer properties needed by default by panda3d is not available on mac, so this is a quick (but not ideal) fix to bypass this problem.
 
-You might also need to create an alias in your .bashrc or .zshrc
-`alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"`
-Firefox is needed in the scripts and the firefox executable is not available by default on mac.
+You might also need to create an alias in your .bashrc or .zshrc  
+`alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"`  
+Firefox is needed in the scripts and the firefox executable is not available by default on mac.  
 
 ## For poetry users
-in `/happypose/pose_estimator/cosypose/cosypose/config.py`
-you need to remove (or comment) any use of `os.environ['CONDA_PREFIX']`
-`CONDA_PREFIX = os.environ['CONDA_PREFIX']` l.46
-`CONDA_BASE_DIR = os.environ['CONDA_PREFIX']` l.51
+in `/happypose/pose_estimator/cosypose/cosypose/config.py`  
+you need to remove (or comment) any use of `os.environ['CONDA_PREFIX']`  
+`CONDA_PREFIX = os.environ['CONDA_PREFIX']` l.46  
+`CONDA_BASE_DIR = os.environ['CONDA_PREFIX']` l.51  
 
-same goes in `happypose/pose_estimators/megapose/config.py`
-`PYTHON_BIN_PATH = Path(os.environ["CONDA_PREFIX"]) / "bin/python"` l.54
+same goes in `happypose/pose_estimators/megapose/config.py`  
+`PYTHON_BIN_PATH = Path(os.environ["CONDA_PREFIX"]) / "bin/python"` l.54  
 
-in `/happypose/pose_estimators/cosypose/setup.py l.9`
-replace
-`os.environ['CXX'] = os.environ.get('GXX', '')`
-by
+in `/happypose/pose_estimators/cosypose/setup.py l.9`  
+replace  
+`os.environ['CXX'] = os.environ.get('GXX', '')`  
+by  
 ```
 if 'CONDA_PYTHON_EXE' in os.environ:
     if 'CXX' not in os.environ:
@@ -59,14 +59,14 @@ You can delete those two packages from the poetry lock to be able to use it, and
 
 ## install with poetry
 
-`poetry install`
-`poetry shell`
-`cd happypose/pose_estimator/cosypose`
-`python3 setup.py install`
+`poetry install`  
+`poetry shell`  
+`cd happypose/pose_estimator/cosypose`  
+`python3 setup.py install`  
 
 You might miss  a couple of packages, but you can pip install them afterwards.
 
-If you haven't already, you will need to install libomp using brew :
+If you haven't already, you will need to install libomp using brew :  
 `brew install libomp`
 
 # Create data directory
